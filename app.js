@@ -5,8 +5,8 @@ const app = express();
 
 
 app.use(cors({
-  origin: 'https://fitverse-project-by-atfan.vercel.app',
-  methods: ['GET', 'POST'],
+  origin: "https://fitverse-project-by-atfan.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],              
   credentials: true
 }));
 app.use(express.json());
