@@ -1,50 +1,35 @@
-const express =require('express')
-const nodemailer =require("nodemailer");
+const express = require('express');
+const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 
+const contactRouting = express.Router();
 
-const contactRouting =express.Router();
+// Set SendGrid API Key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-contactRouting.post('/contact',(req,res)=>{
-
+contactRouting.post('/contact', async (req, res) => {
     try {
-        const {name,mobile,email,message} =req.body;
+        const { name, mobile, email, message } = req.body;
 
-        const transport = nodemailer.createTransport({
-            service : "gmail",
-            auth :{
-                user:process.env.EMAIL_USER,
-                pass :process.env.EMAIL_PASS
+        const msg = {
+            to: 'muhammadatfan17@gmail.com', 
+            from: 'muhammadatfan17@gmail.com',
+            subject: 'Contact Form Request from FitVerse Gym',
+            text: `Name: ${name}\nEmail: ${email}\nMobile: ${mobile}\nMessage: ${message}`,
+            replyTo: email, 
+        };
 
-            },
-        });
+        await sgMail.send(msg);
+        console.log("Mail sent successfully");
+        res.send({ status: true, message: "Mail sent successfully" });
 
-        const mailOptions ={
-            from : `${email}`,
-            to :"muhammadatfan17@gmail.com",
-            subject : `Contact Form Request from FitVerse Gym`,
-            text: `Name: ${name} \nEmail : ${email} \nMobile : ${mobile} \nMessage : ${message}`
+    } catch (error) {
+        console.error("Error sending email:", error);
+        if (error.response) {
+            console.error(error.response.body);
         }
-
-        transport.sendMail(mailOptions,(error,info)=>{
-            if(error) throw error;
-            res.send({status : true,message :"Mail Sent Successfully"})
-            console.log("Mail Sent Successfully")
-        })
-
-
-
-
+        res.status(500).send({ status: false, message: "Something went wrong" });
     }
+});
 
-    catch(err){
-        res.send ({status:false,message :"Something Went Wrong"})
-
-    }
-
-
-
-
-})
-
-module.exports =contactRouting;
+module.exports = contactRouting;
