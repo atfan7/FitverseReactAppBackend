@@ -21,3 +21,5 @@
     "@sendgrid/mail": "^7.7.0"
   }
 }
+
+Add @sendgrid/mail dependency for SendGrid email support
