@@ -1,4 +1,3 @@
-
 const express = require("express");
 const classRouting = require("./router/classRouting");
 require("./dbconfig/dbconfig")
@@ -12,11 +11,6 @@ const registerRouter = require("./router/registerRouting");
 const contactRouting = require("./router/contactRouting");
 
 
-app.use(cors({
-  origin: 'https://fitverse-project-by-atfan.vercel.app', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
 
 const port=4000;
 app.use(express.json());
