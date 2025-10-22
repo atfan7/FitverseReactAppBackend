@@ -1,8 +1,9 @@
 const express = require("express");
+const cors = require("cors");
+require("dotenv").config(); // Load environment variables
+require("./dbconfig/dbconfig");
+
 const classRouting = require("./router/classRouting");
-require("./dbconfig/dbconfig")
-const app=express();
-const cors= require("cors");
 const trainerRouting = require("./router/trainerRouting");
 const scheduleRouting = require('./router/scheduleRouting');
 const enquiryRouting = require("./router/enquiryRouting");
@@ -10,22 +11,32 @@ const classDetailsRouting = require("./router/classDetailsRouting");
 const registerRouter = require("./router/registerRouting");
 const contactRouting = require("./router/contactRouting");
 
+const app = express();
 
 
-const port=4000;
+app.use(cors({
+  origin: 'https://fitverse-project-by-atfan.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
-
-app.use("/",classRouting);
-app.use("/",trainerRouting);
-app.use("/",scheduleRouting);
+app.use("/", classRouting);
+app.use("/", trainerRouting);
+app.use("/", scheduleRouting);
 app.use("/", enquiryRouting);
 app.use("/", classDetailsRouting);
-app.use("/",registerRouter);
-app.use("/",contactRouting);
+app.use("/", registerRouter);
+app.use("/", contactRouting);
 
 
-app.listen(port,()=>{
+app.get("/", (req, res) => {
+  res.send("FitVerse Backend is running");
+});
 
-    console.log(`Server started at ${port}`)
-})
+
+const port = process.env.PORT || 4000;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
